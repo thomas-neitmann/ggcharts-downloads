@@ -69,9 +69,9 @@ plot_downloads_by_country <- function(downloads_by_country, color = "steelblue")
     geom_text(aes(label = N), hjust = -.2, size = 6) +
     labs(
       x = NULL,
-      title = "Countries with Highest Total Number of Downloads"
+      title = "Countries with Highest Total\nNumber of Downloads"
     ) +
-    scale_y_continuous(expand = expand_scale(c(0, .1))) +
+    scale_y_continuous(expand = expand_scale(c(0, .15))) +
     theme_classic(base_size = 18) +
-    ggeasy::easy_remove_y_axis()
+    ggeasy::easy_remove_x_axis()
 }
