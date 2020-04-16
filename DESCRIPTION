@@ -16,6 +16,7 @@ Imports:
     patchwork,
     R.utils,
     scalesextra
+Suggests: glue
 License: MIT + file LICENSE
 URL: https://github.com/thomas-neitmann/ggcharts-downloads
 BugReports: https://github.com/thomas-neitmann/ggcharts-downloads/issues
