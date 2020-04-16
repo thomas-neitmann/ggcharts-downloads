@@ -1,0 +1,38 @@
+{ggcharts} CRAN Downloads
+================
+
+``` r
+library(ggchartsdownloads)
+library(ggplot2)
+library(patchwork)
+Sys.setlocale("LC_TIME", "English")
+```
+
+``` r
+start_date <- as.Date("2020-03-26")
+end_date <- Sys.Date() - 2
+downloads <- download_logs("ggcharts", start_date, end_date)
+daily_downloads <- compute_daily_downloads(downloads)
+downloads_by_country <- compute_downloads_by_country(downloads)
+
+p1 <- plot_daily_downloads(daily_downloads)
+p2 <- plot_cumulative_downloads(daily_downloads)
+p3 <- hist_daily_downloads(daily_downloads)
+p4 <- plot_downloads_by_country(downloads_by_country)
+
+f <- function(date) format(date, "%b %d, %Y")
+patchwork_theme <- theme_classic(base_size = 24) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    plot.caption = element_text(size = 14)
+  )
+p1 + p2 + p3 + p4 +
+  plot_annotation(
+    title = "ggcharts is on the Rise",
+    subtitle = "A Summary of Downloads from the RStudio CRAN Mirror",
+    caption = glue::glue("Source: RStudio CRAN Logs ({f(start_date)} to {f(end_date)})"),
+    theme = patchwork_theme
+  )
+```
+
+![](man/figures/README-unnamed-chunk-2-1.png)

@@ -1,6 +1,26 @@
-library(ggchartsdownloads)
-Sys.setlocale("LC_TIME", "English")
+---
+title: "{ggcharts} CRAN Downloads"
+output: github_document
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  fig.path = "man/figures/README-",
+  fig.width = 12,
+  fig.height = 10
+)
+```
+
+```{r, results='hide'}
+library(ggchartsdownloads)
+library(ggplot2)
+library(patchwork)
+Sys.setlocale("LC_TIME", "English")
+```
+
+```{r}
 start_date <- as.Date("2020-03-26")
 end_date <- Sys.Date() - 2
 downloads <- download_logs("ggcharts", start_date, end_date)
@@ -25,3 +45,5 @@ p1 + p2 + p3 + p4 +
     caption = glue::glue("Source: RStudio CRAN Logs ({f(start_date)} to {f(end_date)})"),
     theme = patchwork_theme
   )
+```
+
