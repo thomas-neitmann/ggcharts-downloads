@@ -1,20 +1,50 @@
 #' @export
-download_logs <- function(pkg = "ggcharts", from = Sys.Date() - 9, to = Sys.Date() - 2) {
+download_logs <- function(pkg = "ggcharts",
+                          from = Sys.Date() - 9,
+                          to = Sys.Date() - 2,
+                          cache = TRUE) {
+  if (cache) {
+    file <- paste0(pkg, "_cache.rds")
+    path <- file.path(system.file(package = "ggchartsdownloads"), file)
+    if (file.exists(path)) {
+      old_downloads <- readRDS(path)
+    }
+  }
+
   dates <- as.Date(from:to, origin = "1970-01-01")
+  if (exists("old_downloads")) {
+    new_dates <- dates[!dates %in% as.Date(old_downloads$date)]
+  } else {
+    new_dates <- dates
+  }
 
-  cl <- parallel::makeCluster(parallel::detectCores())
-  downloads <- parallel::parLapply(cl, dates, function(date) {
-    base_url <- "http://cran-logs.rstudio.com/2020/"
-    file <- paste0(as.character(date), ".csv.gz")
-    url <- paste0(base_url, file)
-    utils::download.file(url, file)
-    downloads <- data.table::fread(file)
-    file.remove(file)
-    downloads[package == "ggcharts"]
-  })
-  parallel::stopCluster(cl)
+  if (length(new_dates)) {
+    n_cores <- min(length(new_dates), parallel::detectCores())
+    cl <- parallel::makeCluster(n_cores)
+    downloads <- parallel::parLapply(cl, new_dates, function(date) {
+      base_url <- "http://cran-logs.rstudio.com/2020/"
+      file <- paste0(as.character(date), ".csv.gz")
+      url <- paste0(base_url, file)
+      utils::download.file(url, file)
+      downloads <- data.table::fread(file)
+      file.remove(file)
+      downloads[package == "ggcharts"]
+    })
+    parallel::stopCluster(cl)
 
-  data.table::rbindlist(downloads)
+    downloads <- data.table::rbindlist(downloads)
+    if (exists("old_downloads")) {
+      downloads <- rbind(old_downloads, downloads)
+    }
+  } else {
+    downloads <- old_downloads
+  }
+
+  if (cache) {
+    saveRDS(downloads, path)
+  }
+
+  downloads[as.Date(date) %in% dates]
 }
 
 #' @export
