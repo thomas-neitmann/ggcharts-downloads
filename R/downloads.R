@@ -4,16 +4,15 @@ download_logs <- function(pkg = "ggcharts",
                           to = Sys.Date() - 2,
                           cache = TRUE) {
   if (cache) {
-    file <- paste0(pkg, "_cache.rds")
-    path <- file.path(system.file(package = "ggchartsdownloads"), file)
-    if (file.exists(path)) {
-      old_downloads <- readRDS(path)
+    file <- paste0(".", pkg, "_cache.rds")
+    if (file.exists(file)) {
+      old_downloads <- readRDS(file)
     }
   }
 
   dates <- as.Date(from:to, origin = "1970-01-01")
   if (exists("old_downloads")) {
-    new_dates <- dates[!dates %in% as.Date(old_downloads$date)]
+    new_dates <- dates[!dates %in% old_downloads$date]
   } else {
     new_dates <- dates
   }
@@ -28,6 +27,7 @@ download_logs <- function(pkg = "ggcharts",
       utils::download.file(url, file)
       downloads <- data.table::fread(file)
       file.remove(file)
+      downloads[, date := as.Date(date)]
       downloads[package == "ggcharts"]
     })
     parallel::stopCluster(cl)
@@ -41,16 +41,16 @@ download_logs <- function(pkg = "ggcharts",
   }
 
   if (cache) {
-    saveRDS(downloads, path)
+    saveRDS(downloads, file)
   }
 
-  downloads[as.Date(date) %in% dates]
+  data.table::setorder(downloads, date)
+  downloads[date %in% dates]
 }
 
 #' @export
 compute_daily_downloads <- function(downloads) {
   daily_downloads <- downloads[, .N, by = date]
-  daily_downloads[, date := as.Date(date)]
   daily_downloads[, cumulative_N := cumsum(N)]
   daily_downloads
 }
