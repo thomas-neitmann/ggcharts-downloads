@@ -1,6 +1,14 @@
 {ggcharts} CRAN Downloads
 ================
 
+This repo contains the analysis of downloads of my [`ggcharts`](https://thomas-neitmann.github.io/ggcharts/index.html) `R` package. Following the ["analyses as package"](https://rmflight.github.io/posts/2014/07/analyses_as_packages.html) philosophy this repo itself is an `R` package that can installed using `remotes::install_github()`.
+
+Why did I bother to make this a package? Because it forced me to modularize my code rather than having one long script. Almost all functions I use below are part of this package.
+
+While I analyze `ggcharts` here, the function are written in a way that you can analyze any CRAN package.
+
+This file was last updates on April 20, 2020.
+
 ``` r
 library(ggchartsdownloads)
 library(ggplot2)
@@ -35,4 +43,4 @@ p1 + p2 + p3 + p4 +
   )
 ```
 
-![](man/figures/README-unnamed-chunk-2-1.png)
+![](man/figures/README-analysis-1.png)
