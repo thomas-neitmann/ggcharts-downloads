@@ -7,13 +7,12 @@ Why did I bother to make this a package? Because it forced me to modularize my c
 
 While I analyze `ggcharts` here, the function are written in a way that you can analyze any CRAN package.
 
-This file was last updates on April 20, 2020.
+This file was last updated on May 01, 2020.
 
 ``` r
 library(ggchartsdownloads)
 library(ggplot2)
 library(patchwork)
-Sys.setlocale("LC_TIME", "English")
 ```
 
 ``` r
