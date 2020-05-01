@@ -32,10 +32,11 @@ plot_cumulative_downloads <- function(daily_downloads, color = "steelblue") {
     geom_text(
       data = max_downloads,
       mapping = aes(date, cumulative_N, label = cumulative_N),
-      vjust = 2,
+      vjust = -.75,
       size = 7
     ) +
     scale_x_date(date_labels = "%b %d") +
+    scale_y_continuous(expand = expansion(c(.05, .2))) +
     theme_classic(base_size = 18) +
     labs(
       x = NULL,
